@@ -28,15 +28,6 @@ React app with Apollo Server backend.
 | Start client                 | `npm run client` | `npm start --prefix client`                          |
 | Start both client and server | `npm run dev`    | `concurrently \"npm run server\" \"npm run client\"` |
 
-## API Routes
-
-| Description           | Route                              |
-| --------------------- | ---------------------------------- |
-| Get all questions     | `GET /api/questions/`              |
-| Get specific question | `GET /api/questions/:id/`          |
-| Create a new question | `POST /api/questions/add/`         |
-| Delete a question     | `DELETE /api/questions/delete/:id` |
-
 ## Notes
 
 -   Based on [this](https://www.youtube.com/playlist?list=PLMhAeHCz8S3_VYiYxpcXtMz96vePOuOX3) Classed tutorial.
