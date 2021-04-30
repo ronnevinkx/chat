@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { REGISTER_USER } from '../queries';
+import { ADD_USER } from '../queries';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 
 export default function Register() {
@@ -17,7 +17,7 @@ export default function Register() {
 
 	const [errors, setErrors] = useState({});
 
-	const [registerUser, { loading }] = useMutation(REGISTER_USER, {
+	const [addUser, { loading }] = useMutation(ADD_USER, {
 		update: (cache, res) => history.push('/'),
 		onError: error => setErrors(error.graphQLErrors[0].extensions.errors)
 	});
@@ -51,7 +51,7 @@ export default function Register() {
 		setErrors(errors);
 
 		if (Object.keys(errors).length === 0) {
-			registerUser({ variables });
+			addUser({ variables });
 		}
 	};
 

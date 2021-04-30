@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { LOGIN_USER } from '../queries';
 import { Row, Col, Form, Button } from 'react-bootstrap';
+import { useAuthDispatch } from '../contexts/auth';
 
 export default function Login() {
 	const history = useHistory();
@@ -14,11 +15,12 @@ export default function Login() {
 	});
 
 	const [errors, setErrors] = useState({});
+	const dispatch = useAuthDispatch();
 
 	const [loginUser, { loading }] = useLazyQuery(LOGIN_USER, {
 		onError: error => setErrors(error.graphQLErrors[0].extensions.errors),
 		onCompleted: data => {
-			localStorage.setItem('token', data.login.token);
+			dispatch({ type: 'LOGIN', payload: data.login });
 			history.push('/');
 		}
 	});

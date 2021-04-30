@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { UserInputError, AuthenticationError } = require('apollo-server');
 const { Op } = require('sequelize');
-const { User } = require('../models');
+const { Message, User } = require('../../models');
 
 // 3 days in seconds
 const maxAge = 3 * 24 * 60 * 60;
@@ -15,34 +15,36 @@ const createToken = id => {
 
 module.exports = {
 	Query: {
-		getUsers: async (parent, args, context) => {
+		getUsers: async (parent, args, { user }) => {
 			try {
-				let user;
+				if (!user) throw new AuthenticationError('Unauthenticated');
+				const currentUser = await User.findOne({
+					where: { id: user.id }
+				});
 
-				if (context.req && context.req.headers.authorization) {
-					const token = context.req.headers.authorization.split(
-						'Bearer '
-					)[1];
-
-					jwt.verify(
-						token,
-						process.env.JWT_SECRET,
-						(error, decodedToken) => {
-							if (error) {
-								throw new AuthenticationError(
-									'Unauthenticated'
-								);
-							}
-
-							user = decodedToken;
-						}
-					);
-				} else {
-					throw new AuthenticationError('Unauthenticated');
-				}
-
-				const users = await User.findAll({
+				let users = await User.findAll({
+					attributes: ['username', 'imageUrl', 'createdAt'],
 					where: { id: { [Op.ne]: user.id } }
+				});
+
+				const allUserMessages = await Message.findAll({
+					where: {
+						[Op.or]: [
+							{ from: currentUser.username },
+							{ to: currentUser.username }
+						]
+					},
+					order: [['createdAt', 'DESC']]
+				});
+
+				users = users.map(otherUser => {
+					const latestMessage = allUserMessages.find(
+						m =>
+							m.from === otherUser.username ||
+							m.to === otherUser.username
+					);
+					otherUser.latestMessage = latestMessage;
+					return otherUser;
 				});
 
 				return users;
@@ -98,7 +100,7 @@ module.exports = {
 		}
 	},
 	Mutation: {
-		register: async (parent, args) => {
+		addUser: async (parent, args) => {
 			let { username, email, password, confirmPassword } = args;
 			username = username.trim().toLowerCase();
 			email = email.trim();
@@ -157,14 +159,6 @@ module.exports = {
 				}
 
 				throw new UserInputError('Bad input', { errors });
-			}
-		},
-		sendMessage: async (parent, args, context) => {
-			try {
-				let { to, content } = args;
-				let errors = {};
-			} catch (error) {
-				//
 			}
 		}
 	}

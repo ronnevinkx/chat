@@ -38,42 +38,14 @@ React app with Apollo Server backend.
 
 -   `sequelize --help` to list all sequelize CLI commands (run in dir where sequelize is locally installed)
 -   `sequelize init`
+-   `sequelize seed:generate --name create-users`: like a migration, but for data
+-   `sequelize db:seed:all`: run all seeds
 
 ### Setting up a migration and migrate
 
 -   `sequelize model:generate --name Message --attributes content:string,uuid:uuid,from:string,to:string`
 -   `sequelize db:migrate`
 
-## Queries
+### Remove Tables
 
-```
-mutation register {
-  register(username:"Username", email:"name@email.com", password:"1234", confirmPassword:"1234") {
-    username
-    email
-  }
-}
-
-query login {
-  login(username:"Username",password:"1234") {
-    username
-    email
-	token
-  }
-}
-
-query getUsers {
-  getUsers {
-    username
-    email
-  }
-}
-```
-
-For `getUsers`:
-
-```
-{
-	"Authorization":"Bearer (token here)"
-}
-```
+`sequelize db:migrate:undo:all`
