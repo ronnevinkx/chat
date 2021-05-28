@@ -7,8 +7,8 @@ const { Message, User } = require('../../models');
 // 3 days in seconds
 const maxAge = 3 * 24 * 60 * 60;
 
-const createToken = id => {
-	return jwt.sign({ id }, process.env.JWT_SECRET, {
+const createToken = user => {
+	return jwt.sign({ user }, process.env.JWT_SECRET, {
 		expiresIn: maxAge
 	});
 };
@@ -18,31 +18,24 @@ module.exports = {
 		getUsers: async (parent, args, { user }) => {
 			try {
 				if (!user) throw new AuthenticationError('Unauthenticated');
+
 				const currentUser = await User.findOne({
-					where: { id: user.id }
+					where: { id: user.user.id }
 				});
 
 				let users = await User.findAll({
-					attributes: ['username', 'imageUrl', 'createdAt'],
-					where: { id: { [Op.ne]: user.id } }
+					where: { id: { [Op.ne]: user.user.id } }
 				});
 
 				const allUserMessages = await Message.findAll({
 					where: {
-						[Op.or]: [
-							{ from: currentUser.username },
-							{ to: currentUser.username }
-						]
+						[Op.or]: [{ from: currentUser.username }, { to: currentUser.username }]
 					},
 					order: [['createdAt', 'DESC']]
 				});
 
 				users = users.map(otherUser => {
-					const latestMessage = allUserMessages.find(
-						m =>
-							m.from === otherUser.username ||
-							m.to === otherUser.username
-					);
+					const latestMessage = allUserMessages.find(m => m.from === otherUser.username || m.to === otherUser.username);
 					otherUser.latestMessage = latestMessage;
 					return otherUser;
 				});
@@ -58,10 +51,8 @@ module.exports = {
 			let errors = {};
 
 			try {
-				if (username === '')
-					errors.username = 'Username must not be empty';
-				if (password === '')
-					errors.password = 'Password must not be empty';
+				if (username === '') errors.username = 'Username must not be empty';
+				if (password === '') errors.password = 'Password must not be empty';
 
 				if (Object.keys(errors).length > 0) {
 					throw new UserInputError('Bad input', { errors });
@@ -74,10 +65,7 @@ module.exports = {
 					throw new UserInputError('User not found', { errors });
 				}
 
-				const correctPassword = await bcrypt.compare(
-					password,
-					user.password
-				);
+				const correctPassword = await bcrypt.compare(password, user.password);
 
 				if (!correctPassword) {
 					errors.password = 'Password is incorrect';
@@ -86,12 +74,12 @@ module.exports = {
 					});
 				}
 
-				const token = createToken(user.id);
+				// store user id and username in token
+				const token = createToken({ id: user.id, username });
 
 				return {
 					...user.toJSON(),
-					token,
-					createdAt: user.createdAt.toISOString()
+					token
 				};
 			} catch (error) {
 				console.log(error);
@@ -109,15 +97,10 @@ module.exports = {
 			try {
 				// validate
 				if (email === '') errors.email = 'Email must not be empty';
-				if (username === '')
-					errors.username = 'Username must not be empty';
-				if (password === '')
-					errors.password = 'Password must not be empty';
-				if (confirmPassword.trim() === '')
-					errors.confirmPassword =
-						'Repeat password must not be empty';
-				if (password !== confirmPassword)
-					errors.confirmPassword = 'Passwords must match';
+				if (username === '') errors.username = 'Username must not be empty';
+				if (password === '') errors.password = 'Password must not be empty';
+				if (confirmPassword.trim() === '') errors.confirmPassword = 'Repeat password must not be empty';
+				if (password !== confirmPassword) errors.confirmPassword = 'Passwords must match';
 
 				// check if username / email exists
 				// we don't need to do this because of our model's `unique` restraints,
@@ -146,14 +129,7 @@ module.exports = {
 				console.log('Error', error);
 
 				if (error.name === 'SequelizeUniqueConstraintError') {
-					error.errors.forEach(
-						e =>
-							(errors[e.path] = `${e.path
-								.charAt(0)
-								.toUpperCase()}${e.path.substr(
-								1
-							)} already exists`)
-					);
+					error.errors.forEach(e => (errors[e.path] = `${e.path.charAt(0).toUpperCase()}${e.path.substr(1)} already exists`));
 				} else if (error.name === 'SequelizeValidationError') {
 					error.errors.forEach(e => (errors[e.path] = e.message));
 				}

@@ -14,7 +14,7 @@ if (token) {
 	if (new Date() > expiresAt) {
 		localStorage.removeItem('token');
 	} else {
-		user = decodedToken;
+		user = decodedToken.user;
 	}
 } else {
 	console.log('No token');

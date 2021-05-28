@@ -1,6 +1,8 @@
 $blue: #1877f2;
 $green: #42b72a;
+$gray-600: rgba(245, 245, 245);
 $border-radius: 0;
+$paragraph-margin-bottom: 0;
 
 @import '~bootstrap/scss/bootstrap';
 
@@ -8,8 +10,104 @@ body {
 	min-height: 100vh;
 	background: linear-gradient(
 		203deg,
-		rgba(131, 58, 180, 0.9) 0%,
-		rgba(253, 29, 29, 0.9) 50%,
-		rgba(252, 176, 69, 0.9) 100%
+		rgba(50, 50, 50) 100%,
+		rgba(100, 100, 100, 0.9) 0%
 	);
+}
+
+.top-user-name {
+	font-size: 14px;
+}
+
+.user-image {
+	width: 50px;
+	height: 50px;
+	object-fit: 'cover';
+	border-radius: 50%;
+}
+
+.users-container:hover {
+	background-color: rgba(252, 252, 252);
+}
+
+.messages-container {
+	height: 500px;
+	overflow-y: auto;
+}
+
+.message-input::placeholder {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+.info-text {
+	color: rgba(0, 0, 0, 0.5);
+	text-align: center;
+	margin-bottom: 0.5rem;
+}
+
+.tooltip-item {
+	position: relative;
+	padding: 0 0.4rem;
+	margin-top: 5px;
+
+	&__arrow {
+		position: absolute;
+		display: block;
+		top: 0;
+		left: 0;
+		width: 0.4rem;
+		height: 0.8rem;
+		transform: translate3d(0px, 8px, 0px);
+
+		&:before {
+			position: absolute;
+			content: '';
+			right: 0;
+			border-color: transparent;
+			border-style: solid;
+			border-width: 0.4rem 0.4rem 0.4rem 0;
+			border-right-color: #000;
+		}
+	}
+
+	&--left &__arrow {
+		left: auto;
+		right: 1px;
+		transform: translate3d(0px, 8px, 0px) rotate(180deg);
+	}
+
+	&__inner {
+		font-size: 0.875rem;
+		color: #fff;
+		text-align: center;
+		padding: 0.1rem 0.5rem 0.32rem;
+		background-color: #000;
+		border-radius: 0.25rem;
+	}
+}
+
+.react-button-popover {
+	height: 30px;
+}
+
+.react-icon-button {
+	font-size: 1rem;
+	padding: 0 0.25rem;
+	transition: 0.25s;
+
+	&:hover {
+		font-size: 1.5rem;
+		text-decoration: none;
+	}
+}
+
+.btn:focus {
+	box-shadow: none;
+}
+
+.reactions-div {
+	position: absolute;
+	right: -10px;
+	bottom: -25px;
+	font-size: 0.9rem;
 }

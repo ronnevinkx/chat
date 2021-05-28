@@ -7,6 +7,7 @@ React app with Apollo Server backend.
 -   React
 -   Apollo Client
 -   React Bootstrap
+-   Jest
 
 ## Backend Technologies
 
@@ -34,12 +35,17 @@ React app with Apollo Server backend.
 
 -   VSCode extension for GraphQL syntax highlighting: `GraphQL for VSCode`
 
+-   Decided to not use `classnames` dependency but vanilla JS instead
+
+-   Decided to extend jwt token with not only with username, but with object that contains id and username
+
 ## Sequelize
 
 -   `sequelize --help` to list all sequelize CLI commands (run in dir where sequelize is locally installed)
 -   `sequelize init`
 -   `sequelize seed:generate --name create-users`: like a migration, but for data
 -   `sequelize db:seed:all`: run all seeds
+-   `sequelize db:seed --seed 20210429191405-create-messages.js`: run specific seed
 
 ### Setting up a migration and migrate
 
@@ -49,3 +55,12 @@ React app with Apollo Server backend.
 ### Remove Tables
 
 `sequelize db:migrate:undo:all`
+
+## TODO
+
+-   Create separate AddMessage component out of Messages component
+-   Issue: `Warning: findDOMNode is deprecated in StrictMode`
+-   Build copy from scratch to better understand everything
+-   Use TypeScript
+-   Use MongoDB instead of Sequelize
+-   Deploy to Heroku / Amazon / Vercel

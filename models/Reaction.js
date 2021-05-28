@@ -1,18 +1,20 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-	class Message extends Model {
+	class Reaction extends Model {
 		/**
 		 * Helper method for defining associations.
 		 * This method is not a part of Sequelize lifecycle.
 		 * The `models/index` file will call this method automatically.
 		 */
-		static associate({ Reaction }) {
+		static associate({ User, Message }) {
 			// define association here
-			this.hasMany(Reaction, { as: 'reactions' }); // set alias, otherwise default would be Reactions
+			// pass foreignKey option, otherwise default would be MessageId
+			this.belongsTo(Message, { foreignKey: 'messageId' });
+			this.belongsTo(User, { foreignKey: 'userId' });
 		}
 	}
-	Message.init(
+	Reaction.init(
 		{
 			content: {
 				type: DataTypes.STRING,
@@ -20,23 +22,22 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			uuid: {
 				type: DataTypes.UUID,
-				allowNull: false,
 				defaultValue: DataTypes.UUIDV4
 			},
-			from: {
-				type: DataTypes.STRING,
+			messageId: {
+				type: DataTypes.INTEGER,
 				allowNull: false
 			},
-			to: {
-				type: DataTypes.STRING,
+			userId: {
+				type: DataTypes.INTEGER,
 				allowNull: false
 			}
 		},
 		{
 			sequelize,
-			modelName: 'Message',
-			tableName: 'messages'
+			modelName: 'Reaction',
+			tableName: 'reactions'
 		}
 	);
-	return Message;
+	return Reaction;
 };

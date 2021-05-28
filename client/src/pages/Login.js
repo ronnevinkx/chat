@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { LOGIN_USER } from '../queries';
@@ -7,8 +6,6 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useAuthDispatch } from '../contexts/auth';
 
 export default function Login() {
-	const history = useHistory();
-
 	const [variables, setVariables] = useState({
 		username: '',
 		password: ''
@@ -21,7 +18,7 @@ export default function Login() {
 		onError: error => setErrors(error.graphQLErrors[0].extensions.errors),
 		onCompleted: data => {
 			dispatch({ type: 'LOGIN', payload: data.login });
-			history.push('/');
+			window.location.href = '/';
 		}
 	});
 
@@ -39,10 +36,10 @@ export default function Login() {
 			errors.password = 'Password must not be empty';
 		}
 
-		setErrors(errors);
-
 		if (Object.keys(errors).length === 0) {
 			loginUser({ variables });
+		} else {
+			setErrors(errors);
 		}
 	};
 

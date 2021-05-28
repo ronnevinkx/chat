@@ -6,7 +6,7 @@ module.exports = gql`
 		username: String!
 		email: String
 		token: String
-		imageUrl: String!
+		imageUrl: String
 		createdAt: String!
 		latestMessage: Message
 	}
@@ -16,6 +16,15 @@ module.exports = gql`
 		from: String!
 		to: String!
 		content: String!
+		createdAt: String!
+		reactions: [Reaction]
+	}
+
+	type Reaction {
+		uuid: String!
+		content: String!
+		message: Message!
+		user: User!
 		createdAt: String!
 	}
 
@@ -34,5 +43,12 @@ module.exports = gql`
 		): User!
 
 		addMessage(to: String!, content: String!): Message!
+
+		reactToMessage(uuid: String!, content: String!): Reaction!
+	}
+
+	type Subscription {
+		newMessage: Message!
+		newReaction: Reaction!
 	}
 `;
