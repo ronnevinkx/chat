@@ -10,9 +10,7 @@ const reactions = ['❤️', '😆', '😯', '😢', '😡', '👍', '👎'];
 const Tooltip = ({ message, pos }) => (
 	<div className={`tooltip-item tooltip-item--${pos}`}>
 		<div className="tooltip-item__arrow"></div>
-		<div className="tooltip-item__inner">
-			{moment(message.createdAt).format('MMMM DD, YYYY @ h:mm a')}
-		</div>
+		<div className="tooltip-item__inner">{moment(message.createdAt).format('MMMM DD, YYYY @ h:mm a')}</div>
 	</div>
 );
 
@@ -51,12 +49,7 @@ export default function Message({ message }) {
 				<Popover className="rounded-pill">
 					<Popover.Content className="d-flex px-0 py-1 align-items-center react-button-popover">
 						{reactions.map(reaction => (
-							<Button
-								variant="link"
-								className="react-icon-button"
-								key={reaction}
-								onClick={() => react(reaction)}
-							>
+							<Button variant="link" className="react-icon-button" key={reaction} onClick={() => react(reaction)}>
 								{reaction}
 							</Button>
 						))}
@@ -77,17 +70,9 @@ export default function Message({ message }) {
 	return (
 		<div className={`d-flex my-3 ${marginClass}`}>
 			{sent && reactButton}
-			<div
-				className={`d-flex`}
-				onMouseOver={() => handleHover()}
-				onMouseOut={() => handleHover()}
-			>
-				{tooltipPos === 'left' && showTooltip && (
-					<Tooltip message={message} pos={tooltipPos} />
-				)}
-				<div
-					className={`py-2 px-3 rounded-pill position-relative ${bgClass}`}
-				>
+			<div className={`d-flex`} onMouseOver={() => handleHover()} onMouseOut={() => handleHover()}>
+				{tooltipPos === 'left' && showTooltip && <Tooltip message={message} pos={tooltipPos} />}
+				<div className={`py-2 px-3 rounded-pill position-relative ${bgClass}`}>
 					{message.reactions.length > 0 && (
 						<div className="reactions-div bg-secondary p-1 rounded-pill">
 							{reactionIcons} {message.reactions.length}
@@ -95,9 +80,7 @@ export default function Message({ message }) {
 					)}
 					<p className={textClass}>{message.content}</p>
 				</div>
-				{tooltipPos === 'right' && showTooltip && (
-					<Tooltip message={message} pos={tooltipPos} />
-				)}
+				{tooltipPos === 'right' && showTooltip && <Tooltip message={message} pos={tooltipPos} />}
 			</div>
 			{!sent && reactButton}
 		</div>

@@ -58,9 +58,6 @@ React app with Apollo Server backend.
 
 ## TODO
 
--   Create separate AddMessage component out of Messages component
--   Issue: `Warning: findDOMNode is deprecated in StrictMode`
--   Build copy from scratch to better understand everything
+-   Build copy from scratch
 -   Use TypeScript
 -   Use MongoDB instead of Sequelize
--   Deploy to Heroku / Amazon / Vercel
