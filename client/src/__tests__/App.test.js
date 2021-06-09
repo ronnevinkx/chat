@@ -25,5 +25,10 @@ describe('App', () => {
 			const { getByTestId } = render(<Button label="Click again" />);
 			expect(getByTestId('btn-primary')).toHaveTextContent('Click again');
 		});
+
+		it('renders button correctly with "Click me!"', () => {
+			const { getByTestId } = render(<Button label="Click me!" />);
+			expect(getByTestId('btn-primary')).toHaveTextContent('Click me!');
+		});
 	});
 });
