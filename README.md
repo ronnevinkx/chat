@@ -2,6 +2,17 @@
 
 React app with Apollo Server backend.
 
+## Table of Contents
+
+-   [Client Technologies](#client-technologies)
+-   [Backend Technologies](#backend-technologies)
+-   [Scripts](#scripts)
+-   [Notes](#notes)
+-   [Sequelize](#sequelize)
+-   [Todo](#todo)
+
+---
+
 ## Client Technologies
 
 -   React
