@@ -9,13 +9,16 @@
 		"sequelize": "^6.6.2"
 	},
 	"scripts": {
-		"dev": "nodemon server.js",
-		"start": "node server.js"
+		"server": "nodemon server.js",
+		"client": "npm start --prefix client",
+		"start": "node server.js",
+		"dev": "concurrently \"npm run server\" \"npm run client\""
 	},
 	"name": "chat",
 	"version": "1.0.0",
 	"main": "server.js",
 	"devDependencies": {
+		"concurrently": "^7.0.0",
 		"nodemon": "^2.0.7"
 	},
 	"keywords": [],
